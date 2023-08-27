@@ -38,7 +38,6 @@ variable "dns_2" {
   type = string
 }
 
-
 variable "export_dir" {
   type = string
   default = "/tmp/images/"#"${env("EXPORT_DIR")}"
