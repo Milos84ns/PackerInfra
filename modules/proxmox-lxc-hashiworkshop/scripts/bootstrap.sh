@@ -23,3 +23,13 @@ sudo systemctl enable code-server
 
 firewall-cmd --permanent --zone=public --add-port=8080/tcp
 firewall-cmd --reload
+
+(
+cat <<-EOF
+
+config path : ~/.config/code-server/config.yaml
+server started at: http://localhost:8080
+EOF
+)  | sudo tee -a /etc/motd
+
+cat
