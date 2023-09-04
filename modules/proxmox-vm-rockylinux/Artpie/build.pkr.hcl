@@ -9,7 +9,7 @@ packer {
 locals {
   timestamp_date = "${formatdate("YYMMDD",timestamp())}"
   timestamp_time = "${formatdate("hhmmss",timestamp())}"
-  template_name  = "${formatdate("YYMMDD",timestamp())}${formatdate("hhmmss",timestamp())}-DockerRockyLinux9"
+  template_name  = "${formatdate("YYMMDD",timestamp())}${formatdate("hhmmss",timestamp())}-ArtpieServer"
 }
 
 

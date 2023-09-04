@@ -39,3 +39,10 @@ echo '
 *******************************************************************************
 
 ' >> /etc/mybanner
+
+# add line to add banner
+(
+ cat <<-EOF
+Banner /etc/mybanner
+EOF
+) | sudo tee -a /etc/ssh/sshd_config

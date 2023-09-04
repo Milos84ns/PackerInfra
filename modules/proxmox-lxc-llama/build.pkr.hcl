@@ -51,7 +51,7 @@ build {
   }
 
   provisioner "shell" {
-    script = "${path.root}/scripts/install-llama.sh"
+    script = "${path.root}/scripts/install_llama.sh"
   }
   post-processors {
     #
