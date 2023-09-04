@@ -40,7 +40,7 @@ build {
 
   #provision packages wget git nano unzip
   provisioner "shell" {
-    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision-dev.sh"
+    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision.sh"
     env = {
       DNS_SEARCH_DOMAIN = var.dns_search_domain
       DNS_1             = var.dns_1
@@ -49,39 +49,9 @@ build {
       root_pass         = "${var.distribution}"
     }
   }
-  provisioner "shell" {
-    script = "${path.root}/scripts/Consul.sh"
-     env = {
-       CONSUL_VERSION = "${var.consul_version}"
-     }
-  }
 
   provisioner "shell" {
-    script = "${path.root}/scripts/Nomad.sh"
-    env = {
-      NOMAD_VERSION = "${var.nomad_version}"
-    }
-  }
-
-  provisioner "shell" {
-    script = "${path.root}/scripts/Vault.sh"
-    env = {
-      VAULT_VERSION = "${var.vault_version}"
-    }
-  }
-
-  provisioner "shell" {
-    script = "${path.root}/scripts/Waypoint.sh"
-    env = {
-      WAYPOINT_VERSION = "${var.waypoint_version}"
-    }
-  }
-
-  provisioner "shell" {
-    script = "${path.root}/scripts/Boundry.sh"
-    env = {
-      BOUNDARY_VERSION = "${var.boundary_version}"
-    }
+    script = "${path.root}/scripts/traefik-install.sh"
   }
 
 
