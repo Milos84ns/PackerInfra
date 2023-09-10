@@ -9,10 +9,10 @@ packer {
 
 locals {
   output_directory = "/tmp/lxc/build/${var.application}/${var.distribution}/${var.os_version}/${var.arch}/${var.image_version}"
-  timestamp_date = "${formatdate("YYMMDD",timestamp())}"
-  timestamp_time = "${formatdate("hhmmss",timestamp())}"
-  box_user = "hashibox"
-  box_group = "hashigroup"
+  timestamp_date   = "${formatdate("YYMMDD",timestamp())}"
+  timestamp_time   = "${formatdate("hhmmss",timestamp())}"
+  box_user         = "hashibox"
+  box_group        = "hashigroup"
 }
 
 source "lxc" "container" {
@@ -40,8 +40,8 @@ build {
 
   #provision packages wget git nano unzip
   provisioner "shell" {
-    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision-dev.sh"
-    env = {
+    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision.sh"
+    env    = {
       DNS_SEARCH_DOMAIN = var.dns_search_domain
       DNS_1             = var.dns_1
       DNS_2             = var.dns_2
@@ -55,41 +55,12 @@ build {
   }
 
   provisioner "shell" {
-    script = "${path.root}/scripts/Consul.sh"
-     env = {
-       CONSUL_VERSION = "${var.consul_version}"
-     }
+    script = "${path.root}/../provisioning_scripts/base/download-image.sh"
+    environment_vars = [
+    "FOLDER=/opt/images/artipie",
+      "IMAGE_TAG=artipie/artipie:latest"
+    ]
   }
-
-  provisioner "shell" {
-    script = "${path.root}/scripts/Nomad.sh"
-    env = {
-      NOMAD_VERSION = "${var.nomad_version}"
-    }
-  }
-
-  provisioner "shell" {
-    script = "${path.root}/scripts/Vault.sh"
-    env = {
-      VAULT_VERSION = "${var.vault_version}"
-    }
-  }
-
-  provisioner "shell" {
-    script = "${path.root}/scripts/Waypoint.sh"
-    env = {
-      WAYPOINT_VERSION = "${var.waypoint_version}"
-    }
-  }
-
-  provisioner "shell" {
-    script = "${path.root}/scripts/Boundry.sh"
-    env = {
-      BOUNDARY_VERSION = "${var.boundary_version}"
-    }
-  }
-
-
 
   post-processors {
     #
@@ -108,7 +79,8 @@ build {
     #
     # The new tgz file is now the actual artifact and we can nuke the previous old 'rootfs.tar.gz'
     #
-    post-processor "artifice" { # tell packer this is now the new artifact
+    post-processor "artifice" {
+      # tell packer this is now the new artifact
       files = ["${var.image_directory}/${build.name}"]
     }
 
