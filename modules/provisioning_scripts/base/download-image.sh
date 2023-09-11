@@ -26,6 +26,8 @@ usage() {
 }
 
 dir="$FOLDER" # dir for building tar in
+echo $dir
+echo $IMAGE_TAG
 shift || usage 1 >&2
 
 if ! [ $# -gt 0 ] && [ "$dir" ]; then
