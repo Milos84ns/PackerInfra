@@ -45,3 +45,9 @@ echo '
 *******************************************************************************
 
 ' >> /etc/mybanner
+
+# Get
+mkdir -p /opt/infra
+cd /opt/infra
+git clone https://github.com/Milos84ns/TerraformInfra.git
+git clone https://github.com/Milos84ns/PackerInfra.git

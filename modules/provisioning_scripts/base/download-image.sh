@@ -5,11 +5,19 @@ set -eo pipefail
 # hello-world                      latest              ef872312fe1bbc5e05aae626791a47ee9b032efa8f3bda39cc0be7b56bfe59b9   3 months ago        910 B
 
 # debian                           latest              f6fab3b798be        10 weeks ago        85.1 MB
-# debian                           latest              f6fab3b798be3174f45aa1eb731f8182705555f89c9026d8c1ef230cbf8301dd   10 weeks ago        85.1 MB
+# debian                           latest              f6fab3b798be3174f45aa1eb731f81827l5555f89c9026d8c1ef230cbf8301dd   10 weeks ago        85.1 MB
 
 #example to download $: ./download-frozen-image-v2.sh "example" hello-world:latest
 #example to load image$: tar -cC 'example' . | docker load
-mkdir -p $FOLDER
+
+#example to download $: ./download-frozen-image-v2.sh "example" hello-world:latest
+#example to load image$: tar -cC 'example' . | docker load
+# example to gzip $: bash download-image.sh pg14alpine postgres:14-alpine
+# zip -r pg14alpine.zip pg14alpine/
+
+# example download nad pipe to gzip $: bash download-image.sh farmOS farmos/farmos:2.1.2 | gzip > farmOS2.1.2.gz
+echo "Folder is $1"
+mkdir -p $1
 
 # check if essential commands are in our PATH
 for cmd in curl jq; do
@@ -25,9 +33,9 @@ usage() {
 	[ -z "$1" ] || exit "$1"
 }
 
-dir="$FOLDER" # dir for building tar in
+dir="$1" # dir for building tar in
 echo $dir
-echo $IMAGE_TAG
+echo $2
 shift || usage 1 >&2
 
 if ! [ $# -gt 0 ] && [ "$dir" ]; then
@@ -78,7 +86,7 @@ fetch_blob() {
 		rm -f "$targetFile"
 
 		local blobRedirect
-		blobRedirect="$(echo "$curlHeaders" | awk -F ': ' 'tolower($1) == "location" { print $IMAGE_TAG; exit }')"
+		blobRedirect="$(echo "$curlHeaders" | awk -F ': ' 'tolower($1) == "location" { print $2; exit }')"
 		if [ -z "$blobRedirect" ]; then
 			echo >&2 "error: failed fetching '$image' blob '$digest'"
 			echo "$curlHeaders" | head -1 >&2

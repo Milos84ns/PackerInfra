@@ -37,7 +37,6 @@ build {
   name    = "${local.timestamp_date}${local.timestamp_time}-${var.application}-${var.distribution}-${var.os_version}-${var.arch}"
   sources = ["source.lxc.container"]
 
-
   #provision packages wget git nano unzip
   provisioner "shell" {
     script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision-dev.sh"
@@ -51,8 +50,9 @@ build {
   }
 
   provisioner "shell" {
-    script = "${path.root}/scripts/install-reposilite.sh"
+    script = "${path.root}/../provisioning_scripts/apps/install-reposilite.sh"
   }
+
   provisioner "file" {
     source = "${path.root}/scripts/bootstrap.sh"
     destination = "/tmp/bootstrap.sh"

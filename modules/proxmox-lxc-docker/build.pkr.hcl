@@ -54,6 +54,11 @@ build {
     script = "${path.root}/../provisioning_scripts/base/docker-provisions.sh"
   }
 
+  provisioner "file" {
+    source = "${path.root}/scripts/bootstrap.sh"
+    destination = "/tmp/bootstrap.sh"
+  }
+
   post-processors {
     #
     # Fix the rootfs issue, re-archive the thing with proper directory structure

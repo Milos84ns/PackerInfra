@@ -1,41 +1,8 @@
-#Simple bootstrap for testing
+systemctl enable docker
+systemctl start docker
 
-REPOSILITE_VERSION=3.4.8
+docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
 
-mkdir -p /opt/repo/workspaces
-TOKEN=$(openssl rand -base64 14)
-export ROOT_TOKEN=$TOKEN
-
-
-cat <<EOF > /usr/lib/systemd/system/reposilite.service
-[Unit]
-Description=Reposilite Service
-Requires=network-online.target
-After=network-online.target
-
-[Service]
-User=root
-Group=root
-Restart=on-failure
-ExecStart=java -Xmx128M -jar /opt/reposilite/reposilite-$REPOSILITE_VERSION-all.jar --token root:$TOKEN
-ExecReload=/bin/kill -HUP $MAINPID
-KillSignal=SIGINT
-KillMode=process
-
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo systemctl start reposilite
-sudo systemctl enable reposilite
-
-firewall-cmd --permanent --zone=public --add-port=8080/tcp
+firewall-cmd --permanent --zone=public --add-port=8000/tcp
+firewall-cmd --permanent --zone=public --add-port=9443/tcp
 firewall-cmd --reload
-
-(
-cat <<-EOF
-
-Reposilite $REPOSILITE_VERSION server started at: http://localhost:8080
-EOF
-)  | sudo tee -a /etc/motd
-
-cat

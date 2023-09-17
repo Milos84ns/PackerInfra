@@ -28,6 +28,7 @@ source "lxc" "container" {
   ]
 }
 
+#
 # a build block invokes sources and runs provisioning steps on them. The
 # documentation for build blocks can be found here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/build
@@ -35,43 +36,28 @@ source "lxc" "container" {
 build {
   name    = "${local.timestamp_date}${local.timestamp_time}-${var.application}-${var.distribution}-${var.os_version}-${var.arch}"
   sources = ["source.lxc.container"]
-  #Basic package provisioning
+
+  #provision packages wget git nano unzip
   provisioner "shell" {
-    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision-dev.sh"
+    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision.sh"
     env = {
       DNS_SEARCH_DOMAIN = var.dns_search_domain
       DNS_1             = var.dns_1
       DNS_2             = var.dns_2
       root_user         = "localadmin"
-      root_pass         = "${var.distribution}"
+      root_pass         = "${var.root_password}"
     }
   }
+
   ############################################ Scripts to Install packages #############################################
 
-  # Install packer
-  provisioner "shell" {
-    script = "${path.root}/scripts/packer-installer.sh"
-  }
-  # Install terraform
-  provisioner "shell" {
-    script = "${path.root}/scripts/terraform-installer.sh"
-  }
-  # Install plugin
-  provisioner "shell" {
-    script = "${path.root}/scripts/plugins-install.sh"
-  }
-  # Install CodeServer
-  provisioner "shell" {
-    script = "${path.root}/scripts/WorkShop.sh"
-  }
+
   provisioner "file" {
     source = "${path.root}/scripts/bootstrap.sh"
     destination = "/tmp/bootstrap.sh"
   }
-  # Setup Environment
-  provisioner "shell" {
-    script = "${path.root}/scripts/setup-environment.sh"
-  }
+
+
   ########################################### Post process scripts #####################################################
   post-processors {
     #

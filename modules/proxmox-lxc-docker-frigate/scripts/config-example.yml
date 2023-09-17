@@ -1,0 +1,324 @@
+########################################## MQTT SERVER
+database:
+  path: /home/frigate.db
+mqtt:
+  host: 192.168.178.56
+  user: mqtt_user
+  password: mqtt_user
+  topic_prefix: frigate
+  client_id: frigate
+########################################## GOOGLE CORAL USB
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+########################################## GLOBAL SETTINGS
+record:
+  enabled: True
+  retain_days: 0
+  events:
+    max_seconds: 300
+    pre_capture: 5
+    post_capture: 5
+    objects:
+      - person
+    retain:
+      default: 10
+
+snapshots:
+  enabled: True
+  timestamp: False
+  bounding_box: True
+  retain:
+    objects:
+      person: 10
+
+live:
+  height: 1920
+  quality: 1
+########################################## INGRESSO
+cameras:
+
+  ingresso:
+    ffmpeg:
+      hwaccel_args:
+        - -hwaccel
+        - vaapi
+        - -hwaccel_device
+        - /dev/dri/renderD128
+        - -hwaccel_output_format
+        - yuv420p
+
+      input_args:
+        - -avoid_negative_ts
+        - make_zero
+        - -fflags
+        - nobuffer+genpts+discardcorrupt
+        - -flags
+        - low_delay
+        - -strict
+        - experimental
+        - -analyzeduration
+        - 1000M
+        - -probesize
+        - 1000M
+        - -rw_timeout
+        - "5000000"
+      output_args:
+        #        rtmp: -c copy -f flv
+        #OLD        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c copy
+        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
+      #        detect: -f rawvideo -pix_fmt yuv420p
+      inputs:
+        - path: http://192.168.178.35/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_main.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - rtmp
+            - record
+        - path: http://192.168.178.35/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_ext.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - detect
+
+    detect:
+      enabled: true
+      width: 640
+      height: 480
+      fps: 7
+
+  ########################################## BALCONE GRANDE
+  balcone_grande:
+    ffmpeg:
+      hwaccel_args:
+        - -hwaccel
+        - vaapi
+        - -hwaccel_device
+        - /dev/dri/renderD128
+        - -hwaccel_output_format
+        - yuv420p
+
+      input_args:
+        - -avoid_negative_ts
+        - make_zero
+        - -fflags
+        - nobuffer+genpts+discardcorrupt
+        - -flags
+        - low_delay
+        - -strict
+        - experimental
+        - -analyzeduration
+        - 1000M
+        - -probesize
+        - 1000M
+        - -rw_timeout
+        - "5000000"
+      output_args:
+        #        rtmp: -c copy -f flv
+        #OLD        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c copy
+        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
+      #        detect: -f rawvideo -pix_fmt yuv420p
+      inputs:
+        - path: http://192.168.178.49/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_main.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - rtmp
+            - record
+        - path: http://192.168.178.49/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_ext.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - detect
+
+    detect:
+      enabled: true
+      width: 640
+      height: 480
+      fps: 7
+    motion:
+      mask:
+        - 492,281,531,212,542,166,561,148,557,119,552,100,576,81,576,0,493,0,316,0,96,0,0,0,0,130,0,480,369,480
+
+  ########################################## VERANDA
+  veranda:
+    ffmpeg:
+      hwaccel_args:
+        - -hwaccel
+        - vaapi
+        - -hwaccel_device
+        - /dev/dri/renderD128
+        - -hwaccel_output_format
+        - yuv420p
+
+      input_args:
+        - -avoid_negative_ts
+        - make_zero
+        - -fflags
+        - nobuffer+genpts+discardcorrupt
+        - -flags
+        - low_delay
+        - -strict
+        - experimental
+        - -analyzeduration
+        - 1000M
+        - -probesize
+        - 1000M
+        - -rw_timeout
+        - "5000000"
+      output_args:
+        #        rtmp: -c copy -f flv
+        #OLD        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c copy
+        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
+      #        detect: -f rawvideo -pix_fmt yuv420p
+      inputs:
+        - path: http://192.168.178.33/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_main.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - rtmp
+            - record
+        - path: http://192.168.178.33/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_ext.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - detect
+
+    detect:
+      enabled: true
+      width: 640
+      height: 480
+      fps: 7
+  ########################################## STUDIO
+  studio:
+    ffmpeg:
+      hwaccel_args:
+        - -hwaccel
+        - vaapi
+        - -hwaccel_device
+        - /dev/dri/renderD128
+        - -hwaccel_output_format
+        - yuv420p
+
+      input_args:
+        - -avoid_negative_ts
+        - make_zero
+        - -fflags
+        - nobuffer+genpts+discardcorrupt
+        - -flags
+        - low_delay
+        - -strict
+        - experimental
+        - -analyzeduration
+        - 1000M
+        - -probesize
+        - 1000M
+        - -rw_timeout
+        - "5000000"
+      output_args:
+        #        rtmp: -c copy -f flv
+        #OLD        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c copy
+        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
+      #        detect: -f rawvideo -pix_fmt yuv420p
+      inputs:
+        - path: http://192.168.178.50/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_main.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - rtmp
+            - record
+        - path: http://192.168.178.50/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_ext.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - detect
+
+    detect:
+      enabled: true
+      width: 640
+      height: 480
+      fps: 7
+
+    motion:
+      mask:
+        - 411,393,380,228,271,224,224,223,205,223,250,227,194,221,176,220,153,259,133,43,97,240,91,480,0,480,0,0,226,0,640,0,640,163,640,480,431,480
+        - 640,480
+  ########################################## CAMERA DA LETTO
+  camera_da_letto:
+    ffmpeg:
+      hwaccel_args:
+        - -hwaccel
+        - vaapi
+        - -hwaccel_device
+        - /dev/dri/renderD128
+        - -hwaccel_output_format
+        - yuv420p
+
+      input_args:
+        - -avoid_negative_ts
+        - make_zero
+        - -fflags
+        - nobuffer+genpts+discardcorrupt
+        - -flags
+        - low_delay
+        - -strict
+        - experimental
+        - -analyzeduration
+        - 1000M
+        - -probesize
+        - 1000M
+        - -rw_timeout
+        - "5000000"
+      output_args:
+        #        rtmp: -c copy -f flv
+        #OLD        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c copy
+        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
+      #        detect: -f rawvideo -pix_fmt yuv420p
+      inputs:
+        - path: http://192.168.178.53/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_main.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - rtmp
+            - record
+        - path: http://192.168.178.53/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password=mypass
+          #        - path: rtmp://192.168.178.35/bcs/channel0_ext.bcs?channel=0&stream=0&user=admin&password=mypass
+          roles:
+            - detect
+
+    detect:
+      enabled: true
+      width: 640
+      height: 480
+      fps: 7
+
+    motion:
+      mask:
+        - 0,480,0,0,77,0,184,0,640,0,640,480,348,480,294,84,309,0,217,0,215,0,196,24,194,59,176,55,167,85,148,103,133,221,119,390,130,480
+########################################## CAMPANELLO
+#  campanello:
+#    ffmpeg:
+#      hwaccel_args:
+#        - -hwaccel
+#        - vaapi
+#        - -hwaccel_device
+#        - /dev/dri/renderD128
+#        - -hwaccel_output_format
+#        - yuv420p
+#
+#      input_args:
+#        -avoid_negative_ts make_zero
+#        -fflags +genpts+discardcorrupt
+#        -rtsp_transport tcp
+#        -stimeout 5000000
+#        -use_wallclock_as_timestamps 1
+#
+#
+#      output_args:
+#        detect: -f rawvideo -pix_fmt yuv420p
+#        record: -f segment -segment_time 60 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v copy -c:a aac
+#        rtmp: -c copy -f flv
+#
+#      inputs:
+#        - path: rtsp://admin:mypass@192.168.178.46:554/cam/realmonitor?channel=1&subtype=0
+#          roles:
+#            - detect
+#            - record
+#            - rtmp
+#    detect:
+#      enabled: true
+#      width: 2560
+#      height: 1920
+#      fps: 5

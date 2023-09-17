@@ -51,7 +51,11 @@ build {
   }
 
   provisioner "shell" {
-    script = "${path.root}/scripts/install-artpie.sh"
+    script = "${path.root}/../provisioning_scripts/base/docker-provisions.sh"
+  }
+
+  provisioner "shell" {
+    script = "${path.root}/../provisioning_scripts/apps/install-artpie.sh"
   }
 
   provisioner "file" {

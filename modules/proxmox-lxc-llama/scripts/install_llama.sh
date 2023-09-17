@@ -15,6 +15,8 @@ sudo dnf install dnf-utils
 #
 cd /opt
 
+git clone https://github.com/ggerganov/llama.cpp.git ~/llama.cpp
+
 git clone https://github.com/ggerganov/llama.cpp.git
 
 go generate ./...

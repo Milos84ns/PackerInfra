@@ -42,6 +42,7 @@ dependency-reduced-pom.xml
 *.log
 .idea
 
+images/
 
 terraform.tfstate
 .terraform.lock.hcl
