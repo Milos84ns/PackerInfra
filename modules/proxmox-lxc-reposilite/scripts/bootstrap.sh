@@ -3,9 +3,15 @@
 REPOSILITE_VERSION=3.4.8
 
 mkdir -p /opt/repo/workspaces
+mkdir -p /opt/secrets
+mkdir -p /opt/logs
+
 TOKEN=$(openssl rand -base64 14)
 export ROOT_TOKEN=$TOKEN
 
+cat <<EOF > /opt/secrets/reposilite.sec
+Token : $TOKEN
+EOF
 
 cat <<EOF > /usr/lib/systemd/system/reposilite.service
 [Unit]
@@ -17,7 +23,7 @@ After=network-online.target
 User=root
 Group=root
 Restart=on-failure
-ExecStart=java -Xmx128M -jar /opt/reposilite/reposilite-$REPOSILITE_VERSION-all.jar --token root:$TOKEN
+ExecStart=java -Xmx128M -jar -Dtinylog.writerFile.file=/opt/logs/reposilite_log.txt /opt/reposilite/reposilite-$REPOSILITE_VERSION-all.jar --token root:$TOKEN --working-directory=/opt/repo
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
 KillMode=process

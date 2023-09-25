@@ -50,3 +50,5 @@ terraform.tfstate
 .terraform
 
 env.sh
+
+proxmox-vm-pfsense/variables.pkrvars.hcl
