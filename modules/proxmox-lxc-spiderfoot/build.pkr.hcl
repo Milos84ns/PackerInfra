@@ -37,16 +37,18 @@ build {
   name    = "${local.timestamp_date}${local.timestamp_time}-${var.application}-${var.distribution}-${var.os_version}-${var.arch}"
   sources = ["source.lxc.container"]
 
+
   #provision packages wget git nano unzip
   provisioner "shell" {
-    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision-basic.sh"
+    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision.sh"
+    env = {
+      root_user         = "localadmin"
+      root_pass         = "${var.distribution}"
+    }
   }
 
-  ############################################ Scripts to Install packages #############################################
-
-
   provisioner "shell" {
-    script = "${path.root}/../provisioning_scripts/apps/install-rust-fileserver.sh"
+    script = "${path.root}/../provisioning_scripts/apps/install-spider-foot.sh"
   }
 
   provisioner "file" {
@@ -55,7 +57,6 @@ build {
   }
 
 
-  ########################################### Post process scripts #####################################################
   post-processors {
     #
     # Fix the rootfs issue, re-archive the thing with proper directory structure

@@ -3,6 +3,7 @@ set -e
 
 # Setup Welcome Banner
 PACKER_VERSION=$(packer -version)
+RUST_VERSION=${rustc -V}
 TERRAFORM_VERSION=$(terraform -version | grep v | awk '{print $2}')
 JDK_VERSION=$(java -version 2>&1 | grep version | awk '{print $3}')
 MVN_VERSION=$(mvn -version | grep Apache | awk '{print $3}')
@@ -29,6 +30,7 @@ Terraform Version ${TERRAFORM_VERSION}
 Java Development Kit version ${JDK_VERSION}
 Maven Version ${MVN_VERSION}
 Code Sever version ${CODE_SERVER_VERSION}
+Rust Version ${RUST_VERSION}
 EOF
 )  | sudo tee -a /etc/motd
 

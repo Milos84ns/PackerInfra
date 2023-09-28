@@ -6,8 +6,11 @@ PASSWD=$root_pass
 echo "Wait for 5 seconds to get IP address..."
 sleep 5 # necessary to get IP address otherwise it can't get packages
 sudo yum update -y
+echo 'Installing git,wget,nano,unzip,jq,lsof,firewalld and tar ...'
 sudo yum install git wget nano unzip jq lsof firewalld tar -y
+echo 'Installing NetworkManager...'
 sudo yum install NetworkManager -y
+echo 'Installing Epel-release...'
 sudo yum install epel-release -y
 sudo yum install dnf -y
 

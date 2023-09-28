@@ -37,16 +37,14 @@ build {
   sources = ["source.lxc.container"]
   #Basic package provisioning
   provisioner "shell" {
-    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision-dev.sh"
-    env = {
-      DNS_SEARCH_DOMAIN = var.dns_search_domain
-      DNS_1             = var.dns_1
-      DNS_2             = var.dns_2
-      root_user         = "localadmin"
-      root_pass         = "${var.distribution}"
-    }
+    script = "${path.root}/../provisioning_scripts/${var.distribution}/base/provision-basic.sh"
   }
-  ############################################ Scripts to Install packages #############################################
+  ######################################### Scripts to Install packages ################################################
+  # Install Java
+  provisioner "shell" {
+    script = "${path.root}/../provisioning_scripts/base/install-java.sh"
+  }
+  ######################################## Scripts to Install applications #############################################
 
   # Install packer
   provisioner "shell" {
@@ -60,6 +58,12 @@ build {
   provisioner "shell" {
     script = "${path.root}/scripts/plugins-install.sh"
   }
+
+  # Install plugin
+  provisioner "shell" {
+    script = "${path.root}/scripts/rust-install.sh"
+  }
+
   # Install CodeServer
   provisioner "shell" {
     script = "${path.root}/scripts/WorkShop.sh"
